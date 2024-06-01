@@ -23,12 +23,18 @@ export default function NavBar() {
             <Link passHref href="/">
               <Nav.Link>Home</Nav.Link>
             </Link>
-            <Button variant="danger" onClick={signOut}>
-              Sign Out
-            </Button>
+            <Link passHref href="/feed">
+              <Nav.Link>feed</Nav.Link>
+            </Link>
+            <Link passHref href="/profile">
+              <Nav.Link>profile</Nav.Link>
+            </Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
+      <Button variant="danger" onClick={signOut}>
+        Sign Out
+      </Button>
     </Navbar>
   );
 }
