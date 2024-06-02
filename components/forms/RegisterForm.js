@@ -12,6 +12,7 @@ function RegisterForm({ user, updateUser }) {
     username: '',
     imageUrl: '',
     email: '',
+    bio: '',
     isHost: false,
     uid: user.uid,
   });
@@ -83,6 +84,23 @@ function RegisterForm({ user, updateUser }) {
       <Form.Group>
         <FloatingLabel
           controlId="floatingInput1"
+          label="Bio"
+        >
+          <Form.Control
+            type="text"
+            autoComplete="off"
+            placeholder="enter bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            required
+          />
+        </FloatingLabel>
+      </Form.Group>
+
+      <Form.Group>
+        <FloatingLabel
+          controlId="floatingInput1"
           label="Profile Image Url"
         >
           <Form.Control
@@ -145,6 +163,7 @@ RegisterForm.propTypes = {
     username: PropTypes.string,
     imageUrl: PropTypes.string,
     email: PropTypes.string,
+    bio: PropTypes.string,
     isHost: PropTypes.bool,
     uid: PropTypes.string.isRequired,
   }).isRequired,

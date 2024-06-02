@@ -11,10 +11,9 @@ export default function ProfileCard() {
         <img src={user.imageUrl} alt="User Profile" width={150} height={150} className="rounded-2" />
       </div>
       <div className="text-center mt-3">
-        <h3 className="mt-2 mb-0 fw-bold">
-          {user.firstName} {user.lastName}
-        </h3>
+        <h3 className="mt-2 mb-0 fw-bold">{user.firstName} {user.lastName}</h3>
         <span className="silent">@{user.username}</span>
+        <h5>{user.bio}</h5>
       </div>
     </div>
   );
