@@ -20,3 +20,7 @@ a {
 body {
   background-color: #fffccb;
 }
+
+.center {
+  margin: 0 auto;
+}
