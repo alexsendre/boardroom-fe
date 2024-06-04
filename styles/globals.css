@@ -27,6 +27,7 @@ body {
 
 .feed-card {
   all: unset;
+  cursor: pointer;
 }
 
 .feed-card:hover,
