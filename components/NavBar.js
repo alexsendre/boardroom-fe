@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import Link from 'next/link';
@@ -7,6 +8,7 @@ import {
   Nav,
   Button,
 } from 'react-bootstrap';
+import { ShoppingCart } from 'lucide-react';
 import { signOut } from '../utils/auth';
 
 export default function NavBar() {
@@ -27,10 +29,15 @@ export default function NavBar() {
             </Link>
           </Nav>
         </Navbar.Collapse>
+        <div className="d-flex flex-row gap-4">
+          <Link passHref href="/cart">
+            <ShoppingCart size={32} color="white" className="cart-margin" />
+          </Link>
+          <Button variant="danger" onClick={signOut}>
+            Sign Out
+          </Button>
+        </div>
       </Container>
-      <Button variant="danger" onClick={signOut}>
-        Sign Out
-      </Button>
     </Navbar>
   );
 }
