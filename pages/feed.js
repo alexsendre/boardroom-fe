@@ -21,7 +21,7 @@ function Feed() {
       <div className="d-flex flex-wrap gap-3">
         {rooms.map((room) => (
           <Link passHref href={`/rooms/${room.id}`}>
-            <Button>
+            <Button className="feed-card">
               <RoomCard obj={room} />
             </Button>
           </Link>

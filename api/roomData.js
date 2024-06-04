@@ -27,7 +27,7 @@ const getSingleRoom = (id) => new Promise((resolve, reject) => {
     },
   })
     .then((response) => response.json())
-    .then((data) => resolve(data[0]))
+    .then((data) => resolve(data))
     .catch(reject);
 });
 
