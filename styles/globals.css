@@ -48,6 +48,15 @@ body {
   margin-top: 13px;
 }
 
-.cart-margin {
+.cart {
   margin-top: 2px;
+  cursor: pointer;
+}
+
+.publish-btn {
+  background-color: rgb(184, 255, 118);
+}
+
+.publish-btn:hover {
+  background-color: rgb(136, 255, 25);
 }

@@ -1,15 +1,29 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { getSingleRoom } from '../../api/roomData';
+import Link from 'next/link';
+import { deleteRoom, getSingleRoom } from '../../api/roomData';
+import { useAuth } from '../../utils/context/authContext';
 
 function RoomDetails() {
   const [roomDetails, setRoomDetails] = useState({});
   const router = useRouter();
   const { id } = router.query;
+  const { user } = useAuth();
 
   const getDetails = () => {
     getSingleRoom(id).then(setRoomDetails);
+  };
+
+  const deleteThisRoom = async () => {
+    if (window.confirm('Are you sure you want to delete this room?')) {
+      try {
+        await deleteRoom(roomDetails.id);
+        router.push('/feed');
+      } catch (error) {
+        console.error('error deleting room:', error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -21,10 +35,21 @@ function RoomDetails() {
       <div className="d-flex mt-5 gap-4 justify-content-center">
         <div>
           <img src={roomDetails.imageUrl} alt="visualization of the room" height={500} className="rounded-3" />
-          <div className="gap-4 mt-3 d-flex justify-content-center">
-            <Button variant="primary" size="lg">Rent room</Button>
-            <Button variant="secondary" size="lg">View items</Button>
-          </div>
+          {user?.id === roomDetails.hostId
+            ? (
+              <div className="gap-4 mt-3 d-flex justify-content-center">
+                <Link passHref href={`/rooms/edit/${roomDetails.id}`}>
+                  <Button variant="warning" size="lg">Edit Room</Button>
+                </Link>
+                <Button variant="danger" size="lg" onClick={() => deleteThisRoom()}>Delete Room</Button>
+              </div>
+            )
+            : (
+              <div className="gap-4 mt-3 d-flex justify-content-center">
+                <Button variant="warning" size="lg">Rent room</Button>
+                <Button variant="success" size="lg">View items</Button>
+              </div>
+            )}
         </div>
         <div className="d-flex flex-column">
           <div>

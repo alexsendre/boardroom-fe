@@ -27,11 +27,14 @@ export default function NavBar() {
             <Link passHref href="/profile">
               <Nav.Link>profile</Nav.Link>
             </Link>
+            <Link passHref href="/rooms/new">
+              <Nav.Link>create</Nav.Link>
+            </Link>
           </Nav>
         </Navbar.Collapse>
         <div className="d-flex flex-row gap-4">
           <Link passHref href="/cart">
-            <ShoppingCart size={32} color="white" className="cart-margin" />
+            <ShoppingCart size={32} color="white" className="cart" />
           </Link>
           <Button variant="danger" onClick={signOut}>
             Sign Out
