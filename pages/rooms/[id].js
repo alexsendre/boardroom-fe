@@ -4,15 +4,29 @@ import { Button } from 'react-bootstrap';
 import Link from 'next/link';
 import { deleteRoom, getSingleRoom } from '../../api/roomData';
 import { useAuth } from '../../utils/context/authContext';
+import { getRoomItems } from '../../api/itemData';
+import ItemCard from '../../components/cards/ItemCard';
+import ItemForm from '../../components/forms/ItemForm';
+
+// TODO: fix bug that requires a hard refresh after itemForm completion
 
 function RoomDetails() {
   const [roomDetails, setRoomDetails] = useState({});
+  const [items, setItems] = useState([]);
   const router = useRouter();
   const { id } = router.query;
   const { user } = useAuth();
 
-  const getDetails = () => {
-    getSingleRoom(id).then(setRoomDetails);
+  const getDetails = async () => {
+    try {
+      const roomData = await getSingleRoom(id);
+      setRoomDetails(roomData);
+
+      const itemsData = await getRoomItems(roomData.id);
+      setItems(itemsData);
+    } catch (error) {
+      console.error('Error fetching room details or items:', error);
+    }
   };
 
   const deleteThisRoom = async () => {
@@ -41,6 +55,7 @@ function RoomDetails() {
                 <Link passHref href={`/rooms/edit/${roomDetails.id}`}>
                   <Button variant="warning" size="lg">Edit Room</Button>
                 </Link>
+                <ItemForm room={roomDetails?.id} />
                 <Button variant="danger" size="lg" onClick={() => deleteThisRoom()}>Delete Room</Button>
               </div>
             )
@@ -62,6 +77,11 @@ function RoomDetails() {
             <section className="content-border">{roomDetails.description}</section>
           </div>
         </div>
+      </div>
+      <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
+        {items[0]?.map((item) => (
+          <ItemCard itemObj={item} key={items.Id} />
+        ))}
       </div>
     </div>
   );

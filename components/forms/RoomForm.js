@@ -35,6 +35,18 @@ export default function RoomForm({ obj }) {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setFormInput((prevState) => ({
+        ...prevState,
+        imageUrl: reader.result,
+      }));
+    };
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (obj.id) {
@@ -100,13 +112,9 @@ export default function RoomForm({ obj }) {
 
         <FloatingLabel controlId="imageUrl" label="Image URL" className="mb-3">
           <Form.Control
-            type="text"
-            autoComplete="off"
-            placeholder="Enter image"
-            name="imageUrl"
-            value={formInput.imageUrl}
-            onChange={handleChange}
-            required
+            type="file"
+            onChange={handleFileChange}
+            {...(obj.id ? {} : { required: true })}
           />
         </FloatingLabel>
 
@@ -127,23 +135,6 @@ export default function RoomForm({ obj }) {
             }}
           />
         </Form.Group>
-
-        {/* <FloatingLabel controlId="categoryId" label="Category" className="mb-3">
-          <Form.Select
-            aria-label="Category"
-            name="categoryId"
-            onChange={handleChange}
-            value={formInput.categoryId}
-            required
-          >
-            <option value="">Select a Category</option>
-            {categoryList.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.label}
-              </option>
-            ))}
-          </Form.Select>
-        </FloatingLabel> */}
 
         <Button variant="none" className="publish-btn" type="submit">{obj && obj.id ? 'Update' : 'Publish'} Room</Button>
       </Form>
