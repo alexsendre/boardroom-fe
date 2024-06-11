@@ -32,7 +32,7 @@ const getSingleItem = (id) => new Promise((resolve, reject) => {
 });
 
 const createRoomItem = (roomId, payload) => new Promise((resolve, reject) => {
-  fetch(`${db}/rooms/${roomId}/items/`, {
+  fetch(`${db}/rooms/${roomId}/items`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

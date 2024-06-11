@@ -62,6 +62,7 @@ export default function ItemForm({ room, obj }) {
         ...formInput,
         roomId: room,
       };
+
       createRoomItem(roomObj.id, payload)
         .then(() => setShow(false))
         .then(window.location.reload());
@@ -70,7 +71,7 @@ export default function ItemForm({ room, obj }) {
 
   return (
     <div className="d-flex justify-content-center">
-      <Button variant="light" size={obj.id ? 'sm' : 'lg'} className="mt-3 mb-3" onClick={handleShow}>
+      <Button variant="success" size={obj.id ? 'sm' : 'lg'} onClick={handleShow}>
         {obj && obj.id ? 'Update' : 'Add'} Items
       </Button>
 
@@ -125,6 +126,7 @@ ItemForm.propTypes = {
     price: PropTypes.number,
     imageUrl: PropTypes.string,
     roomId: PropTypes.number,
+    hostId: PropTypes.number,
   }),
   room: PropTypes.number.isRequired,
 };

@@ -44,6 +44,8 @@ function RoomDetails() {
     getDetails();
   }, []);
 
+  console.log('room details', roomDetails);
+
   return (
     <div>
       <div className="d-flex mt-5 gap-4 justify-content-center">
@@ -80,7 +82,7 @@ function RoomDetails() {
       </div>
       <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
         {items[0]?.map((item) => (
-          <ItemCard itemObj={item} key={items.Id} />
+          <ItemCard itemObj={item} key={items.Id} host={roomDetails.hostId} />
         ))}
       </div>
     </div>
