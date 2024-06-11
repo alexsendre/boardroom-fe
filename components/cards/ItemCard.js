@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import PropTypes from 'prop-types';
@@ -23,7 +24,7 @@ function ItemCard({ itemObj, host }) {
           <h5>{itemObj.name}</h5>
           <h5 className="silent">{itemObj.price}</h5>
         </div>
-        <img src={itemObj.imageUrl} alt="visual representation of the item" height={200} />
+        <img src={itemObj.imageUrl} alt={itemObj.name} height={200} />
         {user?.id === host ? (
           <div className="d-flex justify-content-center gap-3 mt-2 mb-2">
             <ItemForm obj={itemObj} />

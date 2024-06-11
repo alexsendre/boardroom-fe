@@ -44,8 +44,6 @@ function RoomDetails() {
     getDetails();
   }, []);
 
-  console.log('room details', roomDetails);
-
   return (
     <div>
       <div className="d-flex mt-5 gap-4 justify-content-center">

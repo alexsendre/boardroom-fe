@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/button-has-type */
 import React from 'react';
 import { useAuth } from '../../utils/context/authContext';
