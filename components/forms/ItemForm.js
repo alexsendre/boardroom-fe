@@ -40,18 +40,6 @@ export default function ItemForm({ room, obj }) {
     }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setFormInput((prevState) => ({
-        ...prevState,
-        imageUrl: reader.result,
-      }));
-    };
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -105,9 +93,13 @@ export default function ItemForm({ room, obj }) {
 
           <FloatingLabel controlId="imageUrl" label="Image URL" className="mb-3">
             <Form.Control
-              type="file"
-              onChange={handleFileChange}
-              {...(obj.id ? {} : { required: true })}
+              autoComplete="off"
+              type="text"
+              placeholder="Enter image url of item"
+              name="imageUrl"
+              value={formInput.imageUrl}
+              onChange={handleChange}
+              required
             />
           </FloatingLabel>
 

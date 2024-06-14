@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
@@ -7,8 +8,6 @@ import { useAuth } from '../../utils/context/authContext';
 import { getRoomItems } from '../../api/itemData';
 import ItemCard from '../../components/cards/ItemCard';
 import ItemForm from '../../components/forms/ItemForm';
-
-// TODO: fix bug that requires a hard refresh after itemForm completion
 
 function RoomDetails() {
   const [roomDetails, setRoomDetails] = useState({});
@@ -20,7 +19,10 @@ function RoomDetails() {
   const getDetails = async () => {
     try {
       const roomData = await getSingleRoom(id);
-      setRoomDetails(roomData);
+      setRoomDetails({
+        ...roomData,
+        tags: roomData.tags.map((tag) => ({ value: tag.id, label: tag.label })),
+      });
 
       const itemsData = await getRoomItems(roomData.id);
       setItems(itemsData);
@@ -41,8 +43,10 @@ function RoomDetails() {
   };
 
   useEffect(() => {
-    getDetails();
-  }, []);
+    if (id) {
+      getDetails();
+    }
+  }, [id]);
 
   return (
     <div>
@@ -69,9 +73,14 @@ function RoomDetails() {
         <div className="d-flex flex-column">
           <div>
             <h2 className="fw-bold">{roomDetails.title}</h2>
-            <hr className="w-25 mb-3 border-black" />
-            <h4>${roomDetails.price}</h4>
+            <hr className="w-25 mb-1 border-black" />
+            {/* <h4>${roomDetails.price}</h4> */}
             <h6>Located in {roomDetails.location}</h6>
+          </div>
+          <div className="mt-1 mb-1 d-flex flex-wrap gap-2">
+            {roomDetails.tags?.map((tag) => (
+              <span key={tag.id} className="tag-style">{tag.label}</span>
+            ))}
           </div>
           <div>
             <section className="content-border">{roomDetails.description}</section>

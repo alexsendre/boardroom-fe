@@ -30,6 +30,9 @@ export default function NavBar() {
             <Link passHref href="/rooms/new">
               <Nav.Link>create</Nav.Link>
             </Link>
+            <Link passHref href="/tags/new">
+              <Nav.Link>tag+</Nav.Link>
+            </Link>
           </Nav>
         </Navbar.Collapse>
         <div className="d-flex flex-row gap-4">

@@ -1,9 +1,12 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { useRouter } from 'next/router';
 import { PropTypes } from 'prop-types';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
+import ReactSelect from 'react-select';
 import { useAuth } from '../../utils/context/authContext';
-import { createRoom, updateRoom } from '../../api/roomData';
+import { createRoom, getSingleRoom, updateRoom } from '../../api/roomData';
+import { getTags } from '../../api/tagData';
 
 const initialState = {
   id: 0,
@@ -13,18 +16,28 @@ const initialState = {
   location: '',
   imageUrl: '',
   hostId: 0,
-  isLeasable: false,
+  tags: [],
+  // isLeasable: false,
 };
 
 export default function RoomForm({ obj }) {
   const [formInput, setFormInput] = useState(initialState);
-  // const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState([]);
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
-    // getAllTags().then(setTags);
-    if (obj.id) setFormInput(obj);
+    getTags().then((tagOptions) => {
+      setTags(tagOptions.map((tag) => ({ value: tag.id, label: tag.label })));
+    });
+    if (obj.id) {
+      getSingleRoom(obj.id).then((room) => {
+        setFormInput({
+          ...room,
+          tags: room.tags.map((tag) => ({ value: tag.id, label: tag.label })),
+        });
+      });
+    }
   }, [obj, user]);
 
   const handleChange = (e) => {
@@ -47,12 +60,49 @@ export default function RoomForm({ obj }) {
     };
   };
 
+  const handleSelectChange = (selectedOptions) => {
+    setFormInput((prevState) => ({
+      ...prevState,
+      tags: selectedOptions,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('formInput.tags:', formInput.tags); // Add this line to debug
+
+    // Prepare the payload with the required tag objects
+    const payload = {
+      ...formInput,
+      tags: formInput.tags.map((tag) => ({
+        id: tag.value,
+        label: tag.label,
+      })), // Extracting tag objects
+    };
+
     if (obj.id) {
-      updateRoom(formInput).then(() => router.push(`/rooms/${obj.id}`));
+      // Fetch existing room details to get current tags
+      getSingleRoom(obj.id).then((existingRoom) => {
+        const existingTags = existingRoom.tags;
+        const newTags = formInput.tags.map((tag) => ({
+          id: tag.value,
+          label: tag.label,
+        }));
+        const mergedTags = [...existingTags, ...newTags].reduce((acc, tag) => {
+          if (!acc.some((existingTag) => existingTag.id === tag.id)) {
+            acc.push(tag);
+          }
+          return acc;
+        }, []);
+
+        // Update room with merged tags
+        updateRoom({ ...payload, tags: mergedTags }).then(() => {
+          console.log('Updated payload:', payload);
+          router.push(`/rooms/${obj.id}`);
+        });
+      });
     } else {
-      const payload = { ...formInput, hostId: user.id };
+      payload.hostId = user.id;
       createRoom(payload).then(() => router.push('/feed'));
     }
   };
@@ -69,18 +119,6 @@ export default function RoomForm({ obj }) {
             placeholder="Enter Title"
             name="title"
             value={formInput.title}
-            onChange={handleChange}
-            required
-          />
-        </FloatingLabel>
-
-        <FloatingLabel controlId="number" label="Price" className="mb-3">
-          <Form.Control
-            type="number"
-            autoComplete="off"
-            placeholder="Enter price"
-            name="price"
-            value={formInput.price}
             onChange={handleChange}
             required
           />
@@ -118,7 +156,22 @@ export default function RoomForm({ obj }) {
           />
         </FloatingLabel>
 
-        <Form.Group
+        <Form.Group className="mb-3">
+          <Form.Text>Select Tags</Form.Text>
+          <FloatingLabel controlId="floatingInput3" className="mb-3">
+            <ReactSelect
+              isMulti
+              name="tags"
+              options={tags}
+              value={formInput.tags}
+              className="basic-multi-select select-style"
+              classNamePrefix="select"
+              onChange={handleSelectChange}
+            />
+          </FloatingLabel>
+        </Form.Group>
+
+        {/* <Form.Group
           controlId="formBasicCheckbox"
           label="Are you a Host?"
         >
@@ -134,7 +187,7 @@ export default function RoomForm({ obj }) {
               }));
             }}
           />
-        </Form.Group>
+        </Form.Group> */}
 
         <Button variant="none" className="publish-btn" type="submit">{obj && obj.id ? 'Update' : 'Publish'} Room</Button>
       </Form>
@@ -151,7 +204,13 @@ RoomForm.propTypes = {
     location: PropTypes.string,
     imageUrl: PropTypes.string,
     hostId: PropTypes.number,
-    isLeasable: PropTypes.bool,
+    // isLeasable: PropTypes.bool,
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+      }),
+    ),
   }),
 };
 

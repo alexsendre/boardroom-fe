@@ -60,3 +60,14 @@ body {
 .publish-btn:hover {
   background-color: rgb(136, 255, 25);
 }
+
+.tag-style {
+  background-color: rgb(216, 255, 179);
+  border-radius: 20px;
+  border: 1px solid black;
+  padding: 7px;
+}
+
+.select-style {
+  width: 350px;
+}
