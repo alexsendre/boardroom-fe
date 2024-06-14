@@ -3,17 +3,64 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import ItemForm from '../forms/ItemForm';
 import { deleteRoomItem } from '../../api/itemData';
 import { useAuth } from '../../utils/context/authContext';
+import { createOrderItem, getAllOrders } from '../../api/orderData';
 
 function ItemCard({ itemObj, host }) {
   const { user } = useAuth();
+  const router = useRouter();
+
+  const getMostRecentOrder = async () => {
+    try {
+      const orders = await getAllOrders();
+      if (orders.length === 0) {
+        return null;
+      }
+
+      // Filter for open orders (adjust the condition based on your order schema)
+      const openOrders = orders.filter((order) => order.isClosed === false);
+
+      if (openOrders.length === 0) {
+        return null;
+      }
+
+      // Sort open orders by ID or dateCreated to get the most recent one
+      const sortedOrders = openOrders.sort((a, b) => b.id - a.id); // Sorting by ID descending
+
+      return sortedOrders[0];
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      return null;
+    }
+  };
 
   const removeItem = () => {
     if (window.confirm('Remove item?')) {
       deleteRoomItem(itemObj.roomId, itemObj.id).then(window.location.reload());
+    }
+  };
+
+  const addItemToCart = async () => {
+    const mostRecentOrder = await getMostRecentOrder();
+
+    if (mostRecentOrder) {
+      const payload = {
+        orderId: mostRecentOrder.id,
+        itemId: itemObj.id,
+      };
+
+      try {
+        await createOrderItem(payload);
+        router.push(`/orders/${payload.orderId}`);
+        console.log('Item added to cart:', payload);
+      } catch (error) {
+        console.error('Error adding product to order:', error);
+      }
+    } else {
+      console.error('No recent order found');
     }
   };
 
@@ -32,9 +79,7 @@ function ItemCard({ itemObj, host }) {
           </div>
         ) : (
           <div className="d-flex justify-content-center mt-2 mb-2">
-            <Link passHref href="/cart">
-              <Button variant="success" size="md">Add to Cart</Button>
-            </Link>
+            <Button variant="success" size="md" onClick={addItemToCart}>Add to Cart</Button>
           </div>
         )}
       </Card>
@@ -52,6 +97,7 @@ ItemCard.propTypes = {
     hostId: PropTypes.number,
   }).isRequired,
   host: PropTypes.number.isRequired,
+  // onUpdate: PropTypes.func.isRequired,
 };
 
 export default ItemCard;

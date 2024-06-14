@@ -11,7 +11,7 @@ const getPaymentTypes = () => new Promise((resolve, reject) => {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Failed to fetch rooms');
+        throw new Error('Failed to fetch payment types');
       }
       return response.json();
     })
@@ -19,4 +19,19 @@ const getPaymentTypes = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-export default getPaymentTypes;
+const getPaymentTypeById = (id) => new Promise((resolve, reject) => {
+  fetch(`${db}/checkout/types/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    // .then((response) => response.json())
+    .then((data) => resolve(data))
+    .catch(reject);
+});
+
+export {
+  getPaymentTypeById,
+  getPaymentTypes,
+};

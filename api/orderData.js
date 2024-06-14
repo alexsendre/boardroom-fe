@@ -31,6 +31,18 @@ const getSingleOrder = (id) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getOrderItems = (id) => new Promise((resolve, reject) => {
+  fetch(`${db}/orders/${id}/items`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => resolve(data))
+    .catch(reject);
+});
+
 const createOrderItem = (payload) => new Promise((resolve, reject) => {
   fetch(`${db}/orders/items/add`, {
     method: 'POST',
@@ -66,10 +78,24 @@ const deleteOrderItem = (orderId, itemId) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const updateOrder = (payload, id) => new Promise((resolve, reject) => {
+  fetch(`${db}/orders/${id}/complete`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(resolve)
+    .catch(reject);
+});
+
 export {
   getAllOrders,
   getSingleOrder,
   createOrder,
   createOrderItem,
   deleteOrderItem,
+  getOrderItems,
+  updateOrder,
 };
