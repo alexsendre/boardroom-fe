@@ -26,7 +26,6 @@ function OrderDetails() {
     getDetails();
   }, []);
 
-  console.log(orderDetails);
   return (
     <div>
       <div className="text-center mt-3">
@@ -46,7 +45,7 @@ function OrderDetails() {
           ))}
         </div>
       </div>
-      {orderDetails.isClosed ? <div className="d-flex flex-column align-items-center"><h4>Order Complete</h4><h3>${orderDetails.total}</h3></div>
+      {orderDetails.isClosed ? <div className="d-flex flex-column align-items-center"><h4>Order Complete</h4><h3 className="mb-5">${orderDetails.total}</h3></div>
         : (
           <div className="d-flex justify-content-center gap-3">
             <Button variant="primary" onClick={() => router.push('/feed')}>keep shopping</Button>

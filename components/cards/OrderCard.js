@@ -5,16 +5,13 @@ import Link from 'next/link';
 import Card from 'react-bootstrap/Card';
 import { getUserById } from '../../api/userData';
 import { useAuth } from '../../utils/context/authContext';
-import { getPaymentTypeById } from '../../api/paymentTypeData';
 
 function OrderCard({ orderObj }) {
   const [buyer, setBuyer] = useState({});
-  const [paymentType, setPaymentType] = useState({});
   const { user } = useAuth();
 
   const fetchDetails = () => {
     getUserById(user.id).then(setBuyer);
-    getPaymentTypeById(orderObj.paymentTypeId).then(setPaymentType);
   };
 
   useEffect(() => {
@@ -28,13 +25,14 @@ function OrderCard({ orderObj }) {
         <Card.Text>{buyer.firstName} {buyer.lastName}</Card.Text>
         <Card.Text>Address: {orderObj.address}</Card.Text>
         <Card.Text>{orderObj.city}, {orderObj.state}</Card.Text>
-        <Card.Text>Total: {orderObj?.calculateTotal}</Card.Text>
         {orderObj.isClosed ? (
-          <Card.Text>Closed</Card.Text>
+          <div>
+            <Card.Text>Total: {orderObj?.calculateTotal}</Card.Text>
+            <Card.Text className="mb-3"><strong>Closed</strong></Card.Text>
+          </div>
         ) : (
-          <Card.Text>Current Order</Card.Text>
+          <Card.Text><strong>Current Order</strong></Card.Text>
         )}
-        <Card.Text>Payment Type: {paymentType.label}</Card.Text>
         <Link href={`orders/${orderObj.id}`} passHref>
           <Button className="user-card-button" variant="danger">VIEW DETAILS</Button>
         </Link>

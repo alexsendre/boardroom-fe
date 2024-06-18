@@ -40,7 +40,6 @@ function RegisterForm({ userObj }) {
     }
   };
 
-  console.log(userObj);
   useEffect(() => {
     if (userObj.id) {
       setFormData(userObj);

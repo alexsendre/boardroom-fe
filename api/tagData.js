@@ -53,9 +53,22 @@ const removeTagFromRoom = (roomId, tagId) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getTagById = (id) => new Promise((resolve, reject) => {
+  fetch(`${db}/tags/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => resolve(data))
+    .catch(reject);
+});
+
 export {
   getTags,
   createTag,
   addTagToRoom,
   removeTagFromRoom,
+  getTagById,
 };

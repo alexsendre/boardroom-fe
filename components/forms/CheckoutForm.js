@@ -56,32 +56,35 @@ function CheckoutForm({ orderId }) {
 
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit}>
-          <h2 className="mt-2">Checkout</h2>
+          <h2 className="mt-4 text-center">Checkout</h2>
 
-          <FloatingLabel controlId="paymentType" label="Payment Type">
-            <Form.Select
-              name="paymentTypeId"
-              onChange={handleChange}
-              className="mb-3"
-              value={formInput.paymentTypeId}
-              required
-            >
-              <option value="">Select a Payment Type</option>
-              {paymentType?.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.label}
-                </option>
-              ))}
-            </Form.Select>
-          </FloatingLabel>
+          <div className="p-3">
+            <FloatingLabel controlId="paymentType" label="Payment Type">
+              <Form.Select
+                name="paymentTypeId"
+                onChange={handleChange}
+                className="mb-3"
+                value={formInput.paymentTypeId}
+                required
+              >
+                <option value="" disabled>Select a Payment Type</option>
+                {paymentType?.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </FloatingLabel>
 
-          <h3 className="text-center">Order Total: ${orderDetails.total}</h3>
+            <h3 className="text-center mb-3">Order Total: ${orderDetails.total}</h3>
 
-          <div className="d-flex justify-content-center">
-            <Button variant="primary" type="submit">
-              Complete Order
-            </Button>
+            <div className="d-flex justify-content-center mb-1">
+              <Button variant="primary" type="submit">
+                Complete Order
+              </Button>
+            </div>
           </div>
+
         </Form>
       </Modal>
     </>

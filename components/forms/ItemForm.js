@@ -65,45 +65,47 @@ export default function ItemForm({ room, obj }) {
 
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit} className="d-flex flex-column justify-content-center">
-          <h2 className="mt-5">{obj && obj.id ? 'Update' : 'Publish an'} Item</h2>
+          <h2 className="mt-4 text-center mb-3">{obj && obj.id ? 'Update' : 'Publish an'} Item</h2>
 
-          <FloatingLabel controlId="name" label="Name" className="mb-3">
-            <Form.Control
-              autoComplete="off"
-              type="text"
-              placeholder="Enter name"
-              name="name"
-              value={formInput.name}
-              onChange={handleChange}
-              required
-            />
-          </FloatingLabel>
+          <div className="p-3">
+            <FloatingLabel controlId="name" label="Name" className="mb-3">
+              <Form.Control
+                autoComplete="off"
+                type="text"
+                placeholder="Enter name"
+                name="name"
+                value={formInput.name}
+                onChange={handleChange}
+                required
+              />
+            </FloatingLabel>
 
-          <FloatingLabel controlId="number" label="Price" className="mb-3">
-            <Form.Control
-              type="number"
-              autoComplete="off"
-              placeholder="Enter price"
-              name="price"
-              value={formInput.price}
-              onChange={handleChange}
-              required
-            />
-          </FloatingLabel>
+            <FloatingLabel controlId="number" label="Price" className="mb-3">
+              <Form.Control
+                type="number"
+                autoComplete="off"
+                placeholder="Enter price"
+                name="price"
+                value={formInput.price}
+                onChange={handleChange}
+                required
+              />
+            </FloatingLabel>
 
-          <FloatingLabel controlId="imageUrl" label="Image URL" className="mb-3">
-            <Form.Control
-              autoComplete="off"
-              type="text"
-              placeholder="Enter image url of item"
-              name="imageUrl"
-              value={formInput.imageUrl}
-              onChange={handleChange}
-              required
-            />
-          </FloatingLabel>
+            <FloatingLabel controlId="imageUrl" label="Image URL" className="mb-3">
+              <Form.Control
+                autoComplete="off"
+                type="text"
+                placeholder="Enter image url of item"
+                name="imageUrl"
+                value={formInput.imageUrl}
+                onChange={handleChange}
+                required
+              />
+            </FloatingLabel>
+          </div>
 
-          <Button variant="none" className="publish-btn" type="submit">{obj && obj.id ? 'Update' : 'Publish'} Item</Button>
+          <Button variant="none" className="publish-btn w-50 m-auto mb-4" type="submit">{obj && obj.id ? 'Update' : 'Publish'} Item</Button>
         </Form>
       </Modal>
 

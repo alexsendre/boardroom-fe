@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import { createOrder } from '../../api/orderData';
+import { useAuth } from '../../utils/context/authContext';
 
 const initialState = {
   address: '',
@@ -13,11 +14,16 @@ const initialState = {
 
 function OrderForm() {
   const [formInput, setFormInput] = useState(initialState);
+  const { user } = useAuth();
   const router = useRouter();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createOrder(formInput).then(() => router.push('/orders'));
+    const payload = {
+      ...formInput,
+      userId: user?.id,
+    };
+    createOrder(payload).then(() => router.push('/orders'));
   };
 
   const handleChange = (e) => {

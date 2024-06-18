@@ -54,8 +54,8 @@ const deleteRoom = (id) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const updateRoom = (roomId, payload) => new Promise((resolve, reject) => {
-  fetch(`${db}/rooms/edit/${roomId}`, {
+const updateRoom = (payload) => new Promise((resolve, reject) => {
+  fetch(`${db}/rooms/edit/${payload.id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

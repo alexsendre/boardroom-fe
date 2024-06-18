@@ -1,29 +1,16 @@
-import { useEffect, useState } from 'react';
-import { checkUser } from '../utils/auth';
 import { useAuth } from '../utils/context/authContext';
 import RegisterForm from '../components/forms/RegisterForm';
+import Feed from './feed';
 
 function Home() {
-  const [authUser, setAuthUser] = useState();
   const { user } = useAuth();
+  const isRegistered = user?.id;
 
-  const currentUser = () => {
-    checkUser(user.uid)?.then((x) => {
-      if (x.uid) {
-        setAuthUser(x);
-      } else {
-        setAuthUser(null);
-      }
-    });
-  };
+  if (!isRegistered) {
+    return (<RegisterForm />);
+  }
 
-  console.log(authUser);
-
-  useEffect(() => {
-    currentUser();
-  }, [user]);
-
-  return <RegisterForm />;
+  return <Feed />;
 }
 
 export default Home;

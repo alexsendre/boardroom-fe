@@ -5,6 +5,8 @@ import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../utils/context/authContext';
 import { createRoom, getSingleRoom, updateRoom } from '../../api/roomData';
+import { getTags } from '../../api/tagData';
+import TagDisplay from '../TagDisplay';
 
 const initialState = {
   id: 0,
@@ -14,10 +16,13 @@ const initialState = {
   location: '',
   imageUrl: '',
   sellerId: 0,
+  tags: [],
 };
 
 export default function RoomForm({ obj }) {
   const [formInput, setFormInput] = useState(initialState);
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
   const router = useRouter();
   const { user } = useAuth();
 
@@ -25,6 +30,7 @@ export default function RoomForm({ obj }) {
     if (obj.id) {
       getSingleRoom(obj.id).then(setFormInput);
     }
+    getTags().then(setTags);
   }, [obj, user]);
 
   const handleChange = (e) => {
@@ -35,14 +41,34 @@ export default function RoomForm({ obj }) {
     }));
   };
 
+  const toggle = (option) => {
+    if (selectedTags.includes(option)) {
+      setSelectedTags(
+        selectedTags.filter((item) => item !== option),
+      );
+    } else {
+      setSelectedTags(
+        [...selectedTags, option],
+      );
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const payload = { ...formInput, sellerId: user.id };
     if (obj.id) {
-      updateRoom(obj.id, payload)?.then(() => router.push('/feed'));
+      const payload = {
+        ...formInput,
+        tags: selectedTags,
+      };
+      updateRoom(payload)?.then(() => router.push('/feed'));
     } else {
-      createRoom(payload).then(() => router.push(`/${obj.id}`));
+      const payload = {
+        ...formInput,
+        sellerId: user.id,
+        tags: selectedTags,
+      };
+      createRoom(payload).then(() => router.push('/feed'));
     }
   };
 
@@ -98,6 +124,22 @@ export default function RoomForm({ obj }) {
             required
           />
         </FloatingLabel>
+
+        <div
+          className="flex flex-row justify-start"
+        >
+          {tags.map((tag) => (
+            <>
+              <div className="d-flex justify-content-center gap-2 mb-2 mt-2">
+                <Form.Check
+                  key={tag.id}
+                  onClick={() => toggle(tag)}
+                />
+                <TagDisplay id={tag.id} />
+              </div>
+            </>
+          ))}
+        </div>
 
         <Button variant="none" className="publish-btn" type="submit">{obj && obj.id ? 'Update' : 'Publish'} Room</Button>
       </Form>

@@ -20,14 +20,12 @@ function ItemCard({ itemObj, seller }) {
         return null;
       }
 
-      // Filter for open orders (adjust the condition based on your order schema)
       const openOrders = orders.filter((order) => order.isClosed === false);
 
       if (openOrders.length === 0) {
         return null;
       }
 
-      // Sort open orders by ID or dateCreated to get the most recent one
       const sortedOrders = openOrders.sort((a, b) => b.id - a.id); // Sorting by ID descending
 
       return sortedOrders[0];
@@ -57,7 +55,7 @@ function ItemCard({ itemObj, seller }) {
         router.push(`/orders/${payload.orderId}`);
         console.log('Item added to cart:', payload);
       } catch (error) {
-        console.error('Error adding product to order:', error);
+        console.error('Error adding item to order:', error);
       }
     } else {
       console.error('No recent order found');
@@ -67,9 +65,10 @@ function ItemCard({ itemObj, seller }) {
   return (
     <div className="d-flex justify-content-center mb-4">
       <Card key={itemObj.id} border="dark">
-        <div className="d-flex gap-3 mx-3 mb-1 mt-2">
+        <div className="d-flex flex-column align-items-center mt-2">
           <h5>{itemObj.name}</h5>
-          <h5 className="silent">{itemObj.price}</h5>
+          <hr className="w-25 cart-item-separator" />
+          <h6 className="silent">${itemObj.price}</h6>
         </div>
         <img src={itemObj.imageUrl} alt={itemObj.name} height={200} />
         {user?.id === seller ? (
