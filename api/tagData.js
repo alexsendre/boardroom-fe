@@ -31,13 +31,12 @@ const createTag = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const addTagToRoom = (roomId, payload) => new Promise((resolve, reject) => {
-  fetch(`${db}/rooms/${roomId}/new`, {
+const addTagToRoom = (roomId) => new Promise((resolve, reject) => {
+  fetch(`${db}/rooms/${roomId}/tags`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
   })
     .then((data) => resolve(data))
     .catch(reject);

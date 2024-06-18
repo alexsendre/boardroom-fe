@@ -8,6 +8,7 @@ import { useAuth } from '../../utils/context/authContext';
 import { getRoomItems } from '../../api/itemData';
 import ItemCard from '../../components/cards/ItemCard';
 import ItemForm from '../../components/forms/ItemForm';
+// import RoomTagForm from '../../components/forms/RoomTagForm';
 
 function RoomDetails() {
   const [roomDetails, setRoomDetails] = useState({});
@@ -53,28 +54,25 @@ function RoomDetails() {
       <div className="d-flex mt-5 gap-4 justify-content-center">
         <div>
           <img src={roomDetails.imageUrl} alt="visualization of the room" height={500} className="rounded-3" />
-          {user?.id === roomDetails.hostId
+          {user?.id === roomDetails.sellerId
             ? (
               <div className="gap-4 mt-3 d-flex justify-content-center">
                 <Link passHref href={`/rooms/edit/${roomDetails.id}`}>
                   <Button variant="warning" size="lg">Edit Room</Button>
                 </Link>
                 <ItemForm room={roomDetails?.id} />
+                {/* <RoomTagForm roomId={roomDetails?.id} /> */}
                 <Button variant="danger" size="lg" onClick={() => deleteThisRoom()}>Delete Room</Button>
               </div>
             )
             : (
-              <div className="gap-4 mt-3 d-flex justify-content-center">
-                <Button variant="warning" size="lg">Rent room</Button>
-                <Button variant="success" size="lg">View items</Button>
-              </div>
+              ''
             )}
         </div>
         <div className="d-flex flex-column">
           <div>
             <h2 className="fw-bold">{roomDetails.title}</h2>
             <hr className="w-25 mb-1 border-black" />
-            {/* <h4>${roomDetails.price}</h4> */}
             <h6>Located in {roomDetails.location}</h6>
           </div>
           <div className="mt-1 mb-1 d-flex flex-wrap gap-2">
@@ -89,7 +87,7 @@ function RoomDetails() {
       </div>
       <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
         {items[0]?.map((item) => (
-          <ItemCard itemObj={item} key={items.Id} host={roomDetails.hostId} />
+          <ItemCard itemObj={item} key={items.Id} seller={roomDetails.sellerId} />
         ))}
       </div>
     </div>

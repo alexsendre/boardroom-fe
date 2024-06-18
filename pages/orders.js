@@ -39,14 +39,18 @@ function ViewOrders() {
       </div>
       <div className="d-flex flex-column justify-content-center mt-3 mb-3">
         <h2 className="text-center">Open Orders</h2>
-        <div className="d-flex flex-wrap justify-content-center">
-          {openOrders.map((order) => (
-            <OrderCard key={order.id} orderObj={order} />
-          ))}
-        </div>
+        <hr className="m-auto w-25" />
+        {openOrders.length < 1 ? <div className="d-flex align-items-center mt-3 mb-3 flex-column"><h4>No orders yet!</h4></div> : (
+          <div className="d-flex flex-wrap justify-content-center">
+            {openOrders.map((order) => (
+              <OrderCard key={order.id} orderObj={order} />
+            ))}
+          </div>
+        )}
       </div>
       <div className="text-center mt-3 mb-3">
         <h2 className="order-headers">Closed Orders</h2>
+        <hr className="m-auto w-25" />
         <div>
           <div className="d-flex flex-wrap justify-content-center">
             {closedOrders.map((order) => (

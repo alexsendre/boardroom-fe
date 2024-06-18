@@ -10,8 +10,11 @@ import {
 } from 'react-bootstrap';
 import { ShoppingCart } from 'lucide-react';
 import { signOut } from '../utils/auth';
+import { useAuth } from '../utils/context/authContext';
 
 export default function NavBar() {
+  const { user } = useAuth();
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -27,12 +30,17 @@ export default function NavBar() {
             <Link passHref href="/profile">
               <Nav.Link>profile</Nav.Link>
             </Link>
-            <Link passHref href="/rooms/new">
-              <Nav.Link>create room</Nav.Link>
-            </Link>
-            <Link passHref href="/tags/new">
-              <Nav.Link>create tag</Nav.Link>
-            </Link>
+            {user.isSeller ? (
+              <div className="d-flex flex-row">
+                <Link passHref href="/rooms/new">
+                  <Nav.Link>create room</Nav.Link>
+                </Link>
+                <Link passHref href="/tags/new">
+                  <Nav.Link>create tag</Nav.Link>
+                </Link>
+              </div>
+            ) : ''}
+
           </Nav>
         </Navbar.Collapse>
         <div className="d-flex flex-row gap-4">

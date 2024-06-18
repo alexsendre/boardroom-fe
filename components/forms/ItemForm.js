@@ -118,7 +118,7 @@ ItemForm.propTypes = {
     price: PropTypes.number,
     imageUrl: PropTypes.string,
     roomId: PropTypes.number,
-    hostId: PropTypes.number,
+    sellerId: PropTypes.number,
   }),
   room: PropTypes.number.isRequired,
 };

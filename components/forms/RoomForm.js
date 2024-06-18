@@ -3,10 +3,8 @@ import { useRouter } from 'next/router';
 import { PropTypes } from 'prop-types';
 import { Button, FloatingLabel, Form } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import ReactSelect from 'react-select';
 import { useAuth } from '../../utils/context/authContext';
 import { createRoom, getSingleRoom, updateRoom } from '../../api/roomData';
-import { getTags } from '../../api/tagData';
 
 const initialState = {
   id: 0,
@@ -15,28 +13,17 @@ const initialState = {
   description: '',
   location: '',
   imageUrl: '',
-  hostId: 0,
-  tags: [],
-  // isLeasable: false,
+  sellerId: 0,
 };
 
 export default function RoomForm({ obj }) {
   const [formInput, setFormInput] = useState(initialState);
-  const [tags, setTags] = useState([]);
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
-    getTags().then((tagOptions) => {
-      setTags(tagOptions.map((tag) => ({ value: tag.id, label: tag.label })));
-    });
     if (obj.id) {
-      getSingleRoom(obj.id).then((room) => {
-        setFormInput({
-          ...room,
-          tags: room.tags.map((tag) => ({ value: tag.id, label: tag.label })),
-        });
-      });
+      getSingleRoom(obj.id).then(setFormInput);
     }
   }, [obj, user]);
 
@@ -48,62 +35,14 @@ export default function RoomForm({ obj }) {
     }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setFormInput((prevState) => ({
-        ...prevState,
-        imageUrl: reader.result,
-      }));
-    };
-  };
-
-  const handleSelectChange = (selectedOptions) => {
-    setFormInput((prevState) => ({
-      ...prevState,
-      tags: selectedOptions,
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('formInput.tags:', formInput.tags); // Add this line to debug
 
-    // Prepare the payload with the required tag objects
-    const payload = {
-      ...formInput,
-      tags: formInput.tags.map((tag) => ({
-        id: tag.value,
-        label: tag.label,
-      })), // Extracting tag objects
-    };
-
+    const payload = { ...formInput, sellerId: user.id };
     if (obj.id) {
-      // Fetch existing room details to get current tags
-      getSingleRoom(obj.id).then((existingRoom) => {
-        const existingTags = existingRoom.tags;
-        const newTags = formInput.tags.map((tag) => ({
-          id: tag.value,
-          label: tag.label,
-        }));
-        const mergedTags = [...existingTags, ...newTags].reduce((acc, tag) => {
-          if (!acc.some((existingTag) => existingTag.id === tag.id)) {
-            acc.push(tag);
-          }
-          return acc;
-        }, []);
-
-        // Update room with merged tags
-        updateRoom({ ...payload, tags: mergedTags }).then(() => {
-          console.log('Updated payload:', payload);
-          router.push(`/rooms/${obj.id}`);
-        });
-      });
+      updateRoom(obj.id, payload)?.then(() => router.push('/feed'));
     } else {
-      payload.hostId = user.id;
-      createRoom(payload).then(() => router.push('/feed'));
+      createRoom(payload).then(() => router.push(`/${obj.id}`));
     }
   };
 
@@ -150,44 +89,15 @@ export default function RoomForm({ obj }) {
 
         <FloatingLabel controlId="imageUrl" label="Image URL" className="mb-3">
           <Form.Control
-            type="file"
-            onChange={handleFileChange}
-            {...(obj.id ? {} : { required: true })}
+            autoComplete="off"
+            type="text"
+            placeholder="Enter image url of item"
+            name="imageUrl"
+            value={formInput.imageUrl}
+            onChange={handleChange}
+            required
           />
         </FloatingLabel>
-
-        <Form.Group className="mb-3">
-          <Form.Text>Select Tags</Form.Text>
-          <FloatingLabel controlId="floatingInput3" className="mb-3">
-            <ReactSelect
-              isMulti
-              name="tags"
-              options={tags}
-              value={formInput.tags}
-              className="basic-multi-select select-style"
-              classNamePrefix="select"
-              onChange={handleSelectChange}
-            />
-          </FloatingLabel>
-        </Form.Group>
-
-        {/* <Form.Group
-          controlId="formBasicCheckbox"
-          label="Are you a Host?"
-        >
-          <Form.Check
-            type="switch"
-            name="isLeasable"
-            label="Leasable?"
-            checked={formInput.isLeasable}
-            onChange={(e) => {
-              setFormInput((prevState) => ({
-                ...prevState,
-                isLeasable: e.target.checked,
-              }));
-            }}
-          />
-        </Form.Group> */}
 
         <Button variant="none" className="publish-btn" type="submit">{obj && obj.id ? 'Update' : 'Publish'} Room</Button>
       </Form>
@@ -203,12 +113,11 @@ RoomForm.propTypes = {
     description: PropTypes.string,
     location: PropTypes.string,
     imageUrl: PropTypes.string,
-    hostId: PropTypes.number,
-    // isLeasable: PropTypes.bool,
+    sellerId: PropTypes.number,
     tags: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number,
-        name: PropTypes.string,
+        label: PropTypes.string,
       }),
     ),
   }),

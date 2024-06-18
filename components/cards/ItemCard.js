@@ -9,7 +9,7 @@ import { deleteRoomItem } from '../../api/itemData';
 import { useAuth } from '../../utils/context/authContext';
 import { createOrderItem, getAllOrders } from '../../api/orderData';
 
-function ItemCard({ itemObj, host }) {
+function ItemCard({ itemObj, seller }) {
   const { user } = useAuth();
   const router = useRouter();
 
@@ -72,7 +72,7 @@ function ItemCard({ itemObj, host }) {
           <h5 className="silent">{itemObj.price}</h5>
         </div>
         <img src={itemObj.imageUrl} alt={itemObj.name} height={200} />
-        {user?.id === host ? (
+        {user?.id === seller ? (
           <div className="d-flex justify-content-center gap-3 mt-2 mb-2">
             <ItemForm obj={itemObj} />
             <Button variant="dark" size="md" onClick={removeItem}>Delete</Button>
@@ -94,9 +94,9 @@ ItemCard.propTypes = {
     price: PropTypes.number,
     imageUrl: PropTypes.string,
     roomId: PropTypes.number,
-    hostId: PropTypes.number,
+    sellerId: PropTypes.number,
   }).isRequired,
-  host: PropTypes.number.isRequired,
+  seller: PropTypes.number.isRequired,
   // onUpdate: PropTypes.func.isRequired,
 };
 

@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { deleteOrderItem } from '../../api/orderData';
 
-function CartItemCard({ itemObj, orderId, onUpdate }) {
+function CartItemCard({
+  itemObj, orderId, onUpdate, isClosed,
+}) {
   const removeProductFromCart = () => {
     if (window.confirm(`Remove ${itemObj.name} from cart?`)) {
       deleteOrderItem(orderId, itemObj.id)
@@ -20,13 +22,14 @@ function CartItemCard({ itemObj, orderId, onUpdate }) {
 
   return (
     <div className="d-flex justify-content-center mb-3">
-      <Card key={itemObj.id} border="dark" width={300}>
-        <div className="d-flex gap-3 mx-3 mb-1 mt-2">
+      <Card key={itemObj.id} border="dark" width={300} className="p-2">
+        <div className="d-flex flex-column align-items-center mt-2">
           <h5>{itemObj.name}</h5>
-          <h5 className="silent">{itemObj.price}</h5>
+          <hr className="w-25 cart-item-separator" />
+          <h5 className="silent">${itemObj.price}</h5>
         </div>
         <img src={itemObj.imageUrl} alt={itemObj.name} height={200} />
-        <Button variant="danger" onClick={removeProductFromCart}>Remove</Button>
+        {isClosed ? '' : <Button variant="danger" className="w-50 m-auto mt-2 mb-2" onClick={removeProductFromCart}>Remove</Button>}
       </Card>
     </div>
   );
@@ -39,10 +42,11 @@ CartItemCard.propTypes = {
     price: PropTypes.number,
     imageUrl: PropTypes.string,
     roomId: PropTypes.number,
-    hostId: PropTypes.number,
+    sellerId: PropTypes.number,
   }).isRequired,
   orderId: PropTypes.number.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  isClosed: PropTypes.bool.isRequired,
 };
 
 export default CartItemCard;

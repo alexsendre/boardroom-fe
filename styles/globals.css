@@ -71,3 +71,16 @@ body {
 .select-style {
   width: 350px;
 }
+
+.w-15 {
+  width: 15%;
+}
+
+.cart-item-separator {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.silent {
+  color: rgb(73, 73, 73);
+}

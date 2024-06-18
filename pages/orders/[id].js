@@ -40,13 +40,13 @@ function OrderDetails() {
       </div>
       <div className="mb-3 mt-5">
         <h3 className="text-center">Items</h3>
-        <div>
+        <div className="d-flex flex-wrap justify-content-center gap-3">
           {orderDetails.items?.map((item) => (
-            <CartItemCard key={item.id} itemObj={item} orderId={orderId} onUpdate={getDetails} />
+            <CartItemCard key={item.id} itemObj={item} orderId={orderId} onUpdate={getDetails} isClosed={orderDetails.isClosed} />
           ))}
         </div>
       </div>
-      {orderDetails.isClosed ? ''
+      {orderDetails.isClosed ? <div className="d-flex flex-column align-items-center"><h4>Order Complete</h4><h3>${orderDetails.total}</h3></div>
         : (
           <div className="d-flex justify-content-center gap-3">
             <Button variant="primary" onClick={() => router.push('/feed')}>keep shopping</Button>

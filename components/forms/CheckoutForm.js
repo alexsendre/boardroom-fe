@@ -33,9 +33,7 @@ function CheckoutForm({ orderId }) {
     if (window.confirm('Confirm order?')) {
       try {
         const updatedOrder = { isComplete: true, paymentTypeId: paymentType };
-        console.log('Updating order with:', updatedOrder);
-        await updateOrder(updatedOrder, orderId).then(handleClose());
-        router.push(`/orders/${orderId}`);
+        await updateOrder(updatedOrder, orderId).then(handleClose()).then(window.location.reload());
       } catch (error) {
         console.error('Failed to update order:', error);
       }

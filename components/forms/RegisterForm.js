@@ -1,34 +1,57 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import { useRouter } from 'next/router';
 import Form from 'react-bootstrap/Form';
 import { FloatingLabel } from 'react-bootstrap';
-import { registerUser } from '../../utils/auth'; // Update with path to registerUser
+import { useAuth } from '../../utils/context/authContext';
+import { createUser, updateUser } from '../../api/userData';
 
-function RegisterForm({ user, updateUser }) {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    imageUrl: '',
-    email: '',
-    bio: '',
-    isHost: false,
-    uid: user.uid,
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    registerUser(formData).then(() => updateUser(user.uid));
-  };
+const initialState = {
+  firstName: '',
+  lastName: '',
+  username: '',
+  imageUrl: '',
+  email: '',
+  bio: '',
+  isSeller: false,
+};
+function RegisterForm({ userObj }) {
+  const [formData, setFormData] = useState(initialState);
+  const { user } = useAuth();
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    formData.uid = user.uid;
+
+    if (userObj.id) {
+      updateUser(formData, userObj.id)?.then(() => router.push('/profile'));
+    } else {
+      createUser(formData)?.then(() => router.push('/feed'));
+    }
+  };
+
+  console.log(userObj);
+  useEffect(() => {
+    if (userObj.id) {
+      setFormData(userObj);
+    } else {
+      setFormData(initialState);
+    }
+  }, [userObj]);
+
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className="d-flex flex-column align-items-center">
+      <h2 className="d-flex justify-content-center mt-3">{userObj.id ? 'Update' : 'Create'} Account</h2>
       <Form.Group>
         <FloatingLabel
           controlId="floatingInput1"
@@ -36,6 +59,7 @@ function RegisterForm({ user, updateUser }) {
         >
           <Form.Control
             type="text"
+            className="mb-2 mt-2"
             autoComplete="off"
             maxLength={12}
             placeholder="enter username"
@@ -54,6 +78,7 @@ function RegisterForm({ user, updateUser }) {
         >
           <Form.Control
             type="text"
+            className="mb-2"
             autoComplete="off"
             placeholder="enter first name"
             name="firstName"
@@ -71,6 +96,7 @@ function RegisterForm({ user, updateUser }) {
         >
           <Form.Control
             type="text"
+            className="mb-2"
             autoComplete="off"
             placeholder="enter last name"
             name="lastName"
@@ -88,6 +114,7 @@ function RegisterForm({ user, updateUser }) {
         >
           <Form.Control
             type="text"
+            className="mb-2"
             autoComplete="off"
             placeholder="enter bio"
             name="bio"
@@ -105,6 +132,7 @@ function RegisterForm({ user, updateUser }) {
         >
           <Form.Control
             type="text"
+            className="mb-2"
             autoComplete="off"
             placeholder="enter profile picture url"
             name="imageUrl"
@@ -122,6 +150,7 @@ function RegisterForm({ user, updateUser }) {
         >
           <Form.Control
             type="text"
+            className="mb-2"
             autoComplete="off"
             placeholder="enter email"
             name="email"
@@ -134,17 +163,18 @@ function RegisterForm({ user, updateUser }) {
 
       <Form.Group
         controlId="formBasicCheckbox"
-        label="Are you a Host?"
+        label="Are you a Seller?"
       >
         <Form.Check
           type="switch"
-          name="isHost"
-          label="Are you a host?"
-          checked={formData.isHost}
+          className="mb-4"
+          name="isSeller"
+          label="Are you a seller?"
+          checked={formData.isSeller}
           onChange={(e) => {
             setFormData((prevState) => ({
               ...prevState,
-              isHost: e.target.checked,
+              isSeller: e.target.checked,
             }));
           }}
         />
@@ -157,17 +187,21 @@ function RegisterForm({ user, updateUser }) {
 }
 
 RegisterForm.propTypes = {
-  user: PropTypes.shape({
+  userObj: PropTypes.shape({
+    id: PropTypes.number,
     firstName: PropTypes.string,
     lastName: PropTypes.string,
     username: PropTypes.string,
     imageUrl: PropTypes.string,
     email: PropTypes.string,
     bio: PropTypes.string,
-    isHost: PropTypes.bool,
-    uid: PropTypes.string.isRequired,
-  }).isRequired,
-  updateUser: PropTypes.func.isRequired,
+    isSeller: PropTypes.bool,
+    uid: PropTypes.string,
+  }),
+};
+
+RegisterForm.defaultProps = {
+  userObj: initialState,
 };
 
 export default RegisterForm;
