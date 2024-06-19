@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
-import { useAuth } from '../utils/context/authContext';
 import { getAllOrders } from '../api/orderData';
 import OrderCard from '../components/cards/OrderCard';
 
 function ViewOrders() {
   const [openOrders, setOpenOrders] = useState([]);
   const [closedOrders, setClosedOrders] = useState([]);
-  const { user } = useAuth();
   const router = useRouter();
 
   const getOrders = () => {
-    getAllOrders(user.id)
+    getAllOrders()
       .then((orders) => {
         const open = [];
         const closed = [];
@@ -40,7 +38,7 @@ function ViewOrders() {
       <div className="d-flex flex-column justify-content-center mt-3 mb-3">
         <h2 className="text-center">Open Orders</h2>
         <hr className="m-auto w-25" />
-        {openOrders.length < 1 ? <div className="d-flex align-items-center mt-3 mb-3 flex-column"><h4>No orders yet!</h4></div> : (
+        {openOrders.length === 0 ? <div className="d-flex align-items-center mt-3 mb-3 flex-column"><h4>No orders yet!</h4></div> : (
           <div className="d-flex flex-wrap justify-content-center">
             {openOrders.map((order) => (
               <OrderCard key={order.id} orderObj={order} />

@@ -2,7 +2,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { useAuth } from '../../utils/context/authContext';
 import { getSingleOrder } from '../../api/orderData';
 import { getUserById } from '../../api/userData';
 import CartItemCard from '../../components/cards/CartItemCard';
@@ -10,21 +9,20 @@ import CheckoutForm from '../../components/forms/CheckoutForm';
 
 function OrderDetails() {
   const [orderDetails, setOrderDetails] = useState({});
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState([]);
   const [orderId, setOrderId] = useState(null);
   const router = useRouter();
   const { id } = router.query;
-  const { user } = useAuth();
 
-  const getDetails = async () => {
+  const getDetails = (buyer) => {
     getSingleOrder(id).then(setOrderDetails);
-    getUserById(user.id).then(setUserData);
+    getUserById(buyer).then(setUserData);
     setOrderId(router.query.id);
   };
 
   useEffect(() => {
-    getDetails();
-  }, []);
+    getDetails(orderDetails?.buyer);
+  }, [orderDetails.buyer]);
 
   return (
     <div>

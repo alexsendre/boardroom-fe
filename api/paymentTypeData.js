@@ -19,24 +19,19 @@ const getPaymentTypes = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const getPaymentTypeById = (id) => new Promise((resolve, reject) => {
-  fetch(`${db}/checkout/types/${id}`, {
+const getPaymentTypeById = (typeId) => new Promise((resolve, reject) => {
+  fetch(`${db}/checkout/types/${typeId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch payment types');
-      }
-      return response.json();
-    })
+    .then((res) => res.json())
     .then((data) => resolve(data))
     .catch(reject);
 });
 
 export {
-  getPaymentTypeById,
   getPaymentTypes,
+  getPaymentTypeById,
 };
