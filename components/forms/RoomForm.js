@@ -75,7 +75,7 @@ export default function RoomForm({ obj }) {
   return (
     <div className="d-flex justify-content-center">
       <Form onSubmit={handleSubmit} className="d-flex flex-column justify-content-center">
-        <h2 className="mt-5">{obj && obj.id ? 'Update' : 'Publish a'} Room</h2>
+        <h1 className="mt-5 mb-3">{obj && obj.id ? 'Update' : 'Create a'} Room</h1>
 
         <FloatingLabel controlId="title" label="Title" className="mb-3">
           <Form.Control
@@ -91,7 +91,7 @@ export default function RoomForm({ obj }) {
 
         <FloatingLabel controlId="description" label="Description" className="mb-3">
           <Form.Control
-            type="text"
+            as="textarea"
             autoComplete="off"
             placeholder="Enter description"
             name="description"
@@ -141,7 +141,7 @@ export default function RoomForm({ obj }) {
           ))}
         </div>
 
-        <Button variant="none" className="publish-btn" type="submit">{obj && obj.id ? 'Update' : 'Publish'} Room</Button>
+        <Button variant="none" className="publish-btn" type="submit">{obj && obj.id ? 'Update' : 'Create'} Room</Button>
       </Form>
     </div>
   );

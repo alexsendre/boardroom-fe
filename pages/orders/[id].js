@@ -38,7 +38,7 @@ function OrderDetails() {
         <p><strong>State:</strong> {orderDetails.state}</p>
       </div>
       <div className="mb-3 mt-5">
-        <h3 className="text-center">Items</h3>
+        {orderDetails.items?.length < 1 ? <div className="text-center mb-3"><h2>No items have been added to this order.</h2></div> : <h3 className="text-center">Items</h3>}
         <div className="d-flex flex-wrap justify-content-center gap-3">
           {orderDetails.items?.map((item) => (
             <CartItemCard key={item.id} itemObj={item} orderId={orderId} onUpdate={getDetails} isClosed={orderDetails.isClosed} />

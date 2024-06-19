@@ -84,7 +84,7 @@ function RoomDetails() {
         </div>
       </div>
       <div>
-        <h3 className="mt-5 text-center">Items Listed:</h3>
+        {items[0]?.length === 0 ? <h3 className="mt-5 text-center">No items are listed for this room.</h3> : <h3 className="mt-5 text-center">Items Listed:</h3>}
       </div>
       <div className="mt-4 d-flex flex-wrap justify-content-center gap-3">
         {items[0]?.map((item) => (
