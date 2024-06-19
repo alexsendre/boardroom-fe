@@ -18,5 +18,76 @@ a {
 }
 
 body {
-  background-color: #88effd;
+  background-color: #fffccb;
+}
+
+.center {
+  margin: 0 auto;
+}
+
+.feed-card {
+  all: unset;
+  cursor: pointer;
+}
+
+.feed-card:hover,
+.feed-card:active:focus {
+  background-color: transparent;
+}
+
+.border-black {
+  border-bottom: 1px solid black;
+}
+
+.content-border {
+  border: 1px solid black;
+  height: 340px;
+  width: 500px;
+  border-radius: 7px;
+  padding: 10px;
+  margin-top: 13px;
+}
+
+.cart {
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.publish-btn {
+  background-color: rgb(184, 255, 118);
+}
+
+.publish-btn:hover {
+  background-color: rgb(136, 255, 25);
+}
+
+.tag-style {
+  background-color: rgb(216, 255, 179);
+  border-radius: 20px;
+  border: 1px solid black;
+  padding: 7px;
+}
+
+.select-style {
+  width: 350px;
+}
+
+.w-15 {
+  width: 15%;
+}
+
+.cart-item-separator {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.silent {
+  color: rgb(73, 73, 73);
+}
+
+.profile-bio {
+  border: 1px solid rgb(139, 139, 139);
+  border-radius: 12px;
+  width: 80%;
+  padding: 10px;
 }

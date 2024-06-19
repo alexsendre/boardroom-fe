@@ -13,8 +13,6 @@ const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) 
     return <Loading />;
   }
 
-  console.log(user);
-
   // what the user should see if they are logged in
   if (user) {
     return (
