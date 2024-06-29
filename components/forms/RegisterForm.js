@@ -5,21 +5,21 @@ import { useRouter } from 'next/router';
 import Form from 'react-bootstrap/Form';
 import { FloatingLabel } from 'react-bootstrap';
 import { useAuth } from '../../utils/context/authContext';
-import { createUser, updateUser } from '../../api/userData';
+import { registerUser } from '../../utils/auth';
 
-const initialState = {
-  firstName: '',
-  lastName: '',
-  username: '',
-  imageUrl: '',
-  email: '',
-  bio: '',
-  isSeller: false,
-};
 function RegisterForm({ userObj }) {
-  const [formData, setFormData] = useState(initialState);
   const { user } = useAuth();
   const router = useRouter();
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    imageUrl: '',
+    email: '',
+    bio: '',
+    isSeller: false,
+    uid: user.uid,
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,20 +31,20 @@ function RegisterForm({ userObj }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    formData.uid = user.uid;
+    // if (userObj.id) {
+    //   updateUser(formData, userObj.id)?.then(() => router.push('/profile'));
+    // } else {
+    //   createUser(formData)?.then(() => router.push('/feed'));
+    // }
 
-    if (userObj.id) {
-      updateUser(formData, userObj.id)?.then(() => router.push('/profile'));
-    } else {
-      createUser(formData)?.then(() => router.push('/feed'));
-    }
+    registerUser(formData).then(router.push('/feed'));
   };
 
   useEffect(() => {
     if (userObj.id) {
       setFormData(userObj);
     } else {
-      setFormData(initialState);
+      setFormData(formData);
     }
   }, [userObj]);
 
@@ -196,11 +196,7 @@ RegisterForm.propTypes = {
     bio: PropTypes.string,
     isSeller: PropTypes.bool,
     uid: PropTypes.string,
-  }),
-};
-
-RegisterForm.defaultProps = {
-  userObj: initialState,
+  }).isRequired,
 };
 
 export default RegisterForm;

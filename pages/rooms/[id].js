@@ -73,7 +73,7 @@ function RoomDetails() {
             <hr className="w-25 border-black" />
             <h6 className="mb-2">Located in {roomDetails.location}</h6>
           </div>
-          <div className="mt-1 mb-1 d-flex flex-wrap gap-2">
+          <div className="mt-2 mb-1 d-flex flex-wrap gap-2">
             {roomDetails.tags?.map((tag) => (
               <span key={tag.id} className="tag-style">{tag.label}</span>
             ))}

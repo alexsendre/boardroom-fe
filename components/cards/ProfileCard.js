@@ -17,7 +17,7 @@ export default function ProfileCard() {
           <h3 className="mt-2 mb-0 fw-bold">{user.firstName} {user.lastName}</h3>
           <span className="silent">@{user.username}</span>
           <div className="mt-2">
-            {user.isSeller ? <h5><strong>Seller</strong></h5> : ''}
+            {user.isSeller ? <h5><strong>Seller</strong></h5> : <h5><strong>Shopper</strong></h5>}
           </div>
           <div className="profile-bio m-auto">
             <h5 className="mt-1">{user.bio}</h5>
