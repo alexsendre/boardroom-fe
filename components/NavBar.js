@@ -24,9 +24,6 @@ export default function NavBar() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Link passHref href="/feed">
-              <Nav.Link>Feed</Nav.Link>
-            </Link>
             {user.isSeller ? (
               <div className="d-flex flex-row">
                 <Link passHref href="/rooms/new">
@@ -41,9 +38,11 @@ export default function NavBar() {
           </Nav>
         </Navbar.Collapse>
         <div className="d-flex flex-row gap-3">
-          <Link passHref href="/profile">
-            <CircleUserRound size={32} color="white" className="cart" />
-          </Link>
+          {user.username ? (
+            <Link passHref href="/profile">
+              <CircleUserRound size={32} color="white" className="cart" />
+            </Link>
+          ) : ''}
           <Link passHref href="/orders">
             <ShoppingCart size={32} color="white" className="cart" />
           </Link>
